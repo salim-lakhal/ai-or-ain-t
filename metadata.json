@@ -1,0 +1,5 @@
+{
+  "name": "Copy of AI or Ain't",
+  "description": "A swiping game to detect AI-generated videos versus real footage. Help build the dataset while testing your perception.",
+  "requestFramePermissions": []
+}
