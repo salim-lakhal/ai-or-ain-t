@@ -11,7 +11,9 @@ A mobile-first swipe game that tests your ability to distinguish real videos fro
 
 ## Demo
 
-<!-- GIF will be added after recording -->
+[![Demo](assets/demo.gif)](https://github.com/salim-lakhal/ai-or-ain-t/releases/download/v1.0/demo.mp4)
+
+> *Click to watch the full quality video*
 
 ## Architecture
 
