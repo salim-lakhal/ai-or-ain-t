@@ -1,0 +1,4 @@
+dist
+node_modules
+flutter_app
+package-lock.json

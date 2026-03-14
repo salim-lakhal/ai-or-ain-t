@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+
+body {
+  background-color: #0f172a;
+  color: white;
+  overscroll-behavior: none;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}

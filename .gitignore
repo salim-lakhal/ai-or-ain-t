@@ -45,3 +45,6 @@ build
 # Temporary files
 .tmp
 temp
+
+# Test coverage
+coverage

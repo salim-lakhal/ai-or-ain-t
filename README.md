@@ -1,159 +1,157 @@
-# AI or Ain't - Video Classification Game
+# AI or Ain't
 
-Test your ability to distinguish real videos from AI-generated content!
+[![CI](https://github.com/salim-lakhal/ai-or-ain-t/actions/workflows/ci.yml/badge.svg)](https://github.com/salim-lakhal/ai-or-ain-t/actions/workflows/ci.yml)
+![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4.x-000000?logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
+
+A mobile-first swipe game that tests your ability to distinguish real videos from AI-generated deepfakes. Swipe right if you think it's real, left if you think it's AI. Every swipe feeds a crowd-sourced dataset for deepfake detection research.
+
+## Demo
+
+<!-- GIF will be added after recording -->
+
+## Architecture
+
+```mermaid
+graph LR
+    A[React Client] -->|REST API| B[Express Server]
+    B -->|Mongoose| C[(MongoDB Atlas)]
+    B -->|Static files| D[Video Storage]
+    A -->|Swipe events| B
+    B -->|Analytics| C
+```
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 19, Framer Motion, Tailwind CSS 4, Vite 6 |
+| Backend | Express 4, Mongoose, Helmet, rate-limiting |
+| Database | MongoDB Atlas |
+| Language | TypeScript (strict mode) |
+| Testing | Vitest, Testing Library, Supertest |
+| CI/CD | GitHub Actions |
 
 ## Features
 
-- 📱 **Mobile-Native Friendly**: CORS configured to support mobile apps with no-origin requests
-- 🎮 **Swipe-based Interface**: Intuitive swipe left (AI) or right (REAL) to classify videos
-- 💾 **MongoDB Integration**: Persistent storage for user data and video collections
-- 📊 **Real-time Feedback**: Educational descriptions pulled directly from database
-- 🏆 **Score Tracking**: Track your accuracy, streaks, and performance
-- 🔒 **Enterprise Security**:
-  - Helmet security headers
-  - Rate limiting (100 requests/15min, 30 swipes/min)
-  - NoSQL injection protection
-  - Input validation and sanitization
-  - CORS protection with whitelisted origins
-  - Request size limits (10KB max)
+- Swipe-based video classification with gesture and button controls
+- Real-time feedback with explanations for each video
+- Score tracking with accuracy percentage and streak counter
+- Onboarding flow for new users
+- Rate limiting and input validation on all API endpoints
+- Helmet security headers, CORS protection, NoSQL injection prevention
+- Kaggle dataset integration for bulk video import
+- Mobile-responsive design with touch gesture support
 
-## Run Locally
+## Setup
 
-**Prerequisites:** Node.js 18+
+### Prerequisites
 
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+- Node.js 20+
+- MongoDB Atlas cluster (or local MongoDB)
 
-2. **Configure environment variables:**
+### Installation
 
-   Copy `.env.example` to `.env` and update with your MongoDB connection string:
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `.env`:
-   ```env
-   MONGO_URI=your_mongodb_connection_string
-   PORT=3001
-   NODE_ENV=development
-   ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
-   ```
-
-3. **Start the backend server:**
-   ```bash
-   node server.js
-   ```
-
-   You should see:
-   ```
-   🚀 Server running on port 3001
-   🌍 Environment: development
-   📱 Mobile-native friendly (no-origin support)
-   🔒 Security: Helmet, Rate Limiting, CORS, NoSQL Injection Protection
-   ✅ MongoDB Connected to AIorAINT
-   ```
-
-4. **Start the frontend (in another terminal):**
-   ```bash
-   npm run dev
-   ```
-
-5. **Open your browser:** `http://localhost:5173`
-
-6. **Seed the database (first time only):**
-   - The app will automatically seed the database when you first load it
-   - Or manually seed via: `POST http://localhost:3001/api/seed`
-
-## MongoDB Collections
-
-The app uses two MongoDB collections with predefined schemas:
-
-### UserData Collection
-Stores user swipe data for analytics:
-```javascript
-{
-  user_id: String,           // Default: 'anonymous'
-  video_id: String,          // Required
-  correct_label: 'real'|'ai', // Required
-  user_guess: 'real'|'ai',    // Required
-  is_correct: Boolean,        // Required
-  decision_time_ms: Number,   // Required
-  confidence: Number,         // Optional: 0-1
-  timestamp: Date,
-  app_version: String,
-  device: { platform, model },
-  session_id: String,
-  locale: String,
-  video_rotation_seen: Number,
-  video_order_index: Number
-}
+```bash
+git clone https://github.com/salim-lakhal/ai-or-ain-t.git
+cd ai-or-ain-t
+npm install
 ```
 
-### VideosDATA Collection
-Contains video information:
-```javascript
-{
-  url: String,              // Required
-  label: 'real'|'ai',       // Required
-  description: String,      // Educational text
-  source: String,           // Video source
-  uploaded_at: Date
-}
+### Environment
+
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env
 ```
 
-## API Endpoints
+Required variables:
 
-- `GET /` - API info and available endpoints
-- `GET /api/health` - Health check and DB status
-- `GET /api/videos?limit=10` - Get random videos (max 50)
-- `POST /api/swipes` - Record user swipe (rate limited)
-- `POST /api/seed` - Seed database with initial videos
+| Variable | Description |
+|----------|------------|
+| `MONGO_URI` | MongoDB connection string |
+| `PORT` | Server port (default: 3001) |
+| `NODE_ENV` | `development` or `production` |
+| `ALLOWED_ORIGINS` | Comma-separated CORS origins |
+| `SEED_SECRET` | Auth secret for `/api/seed` in production |
+
+### Run
+
+```bash
+# Start backend
+npm run server
+
+# Start frontend (separate terminal)
+npm run dev
+```
+
+Open `http://localhost:3000` in your browser.
+
+### Scripts
+
+| Command | Description |
+|---------|------------|
+| `npm run dev` | Start Vite dev server |
+| `npm run server` | Start Express backend |
+| `npm run build` | Production build |
+| `npm run test` | Run test suite |
+| `npm run lint` | Run ESLint |
+| `npm run typecheck` | TypeScript type checking |
+| `npm run format` | Format with Prettier |
+
+## API
+
+| Method | Endpoint | Description |
+|--------|----------|------------|
+| `GET` | `/api/health` | Health check and DB status |
+| `GET` | `/api/videos?limit=10` | Fetch random videos (max 50) |
+| `POST` | `/api/swipes` | Record a user swipe |
+| `POST` | `/api/seed` | Seed database with initial videos |
 
 ## Project Structure
 
 ```
-ai-or-ain't/
-├── server.js                    # Main server file
+ai-or-ain-t/
+├── server.ts                    # Express backend
 ├── server/
 │   ├── config/
-│   │   └── database.js         # Database connection & shutdown
-│   └── middleware/
-│       ├── security.js          # Rate limiting, security headers
-│       └── validation.js        # Input validation for swipes
-├── components/                  # React components
+│   │   └── database.ts          # MongoDB connection and shutdown
+│   ├── middleware/
+│   │   ├── security.ts          # Rate limiting, security headers
+│   │   └── validation.ts        # Input validation for swipes
+│   └── __tests__/               # Backend tests
+├── App.tsx                      # Root React component
+├── components/
+│   ├── Header.tsx               # Stats display
+│   ├── SwipeDeck.tsx            # Draggable video card
+│   ├── FeedbackOverlay.tsx      # Correct/incorrect feedback
+│   ├── Onboarding.tsx           # Onboarding flow
+│   └── __tests__/               # Component tests
 ├── services/
-│   └── apiService.ts           # API communication
-├── .env                        # Environment variables (gitignored)
-├── .env.example                # Template for environment variables
-└── package.json
+│   └── apiService.ts            # API client
+├── types.ts                     # Shared TypeScript types
+├── scripts/
+│   ├── process_kaggle_dataset.py  # Kaggle dataset importer
+│   └── seed_db.ts               # Database seeding script
+├── flutter_app/                 # Flutter mobile app (WIP)
+└── public/videos/               # Local video files
 ```
 
-## Security Features
+## Kaggle Integration
 
-1. **Helmet**: Sets secure HTTP headers
-2. **Rate Limiting**: Prevents API abuse
-3. **CORS**: Whitelisted origins only (configurable for mobile)
-4. **NoSQL Injection Protection**: Sanitizes all user input
-5. **Input Validation**: Strict validation on all endpoints
-6. **Request Size Limits**: Max 10KB payload
-7. **Environment Variables**: Sensitive data in .env (never committed)
+The project supports bulk video import from the [REAL/AI Video Dataset](https://www.kaggle.com/datasets/kanzeus/realai-video-dataset) on Kaggle.
 
-## Development vs Production
+```bash
+pip install kagglehub pymongo
+export MONGO_URI='your_connection_string'
+python scripts/process_kaggle_dataset.py
+```
 
-- **Development**: Full error messages, request logging
-- **Production**: Generic error messages, no verbose logging
-
-Set `NODE_ENV=production` in your `.env` for production deployments.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+The script downloads the dataset, extracts metadata, and uploads video URLs to MongoDB. Videos are served from disk via the Express static middleware.
 
 ## License
 
