@@ -52,3 +52,5 @@ coverage
 # Demo video (mp4 is in GitHub release, only GIF committed)
 assets/*.mp4
 assets/*.webm
+
+.claude
